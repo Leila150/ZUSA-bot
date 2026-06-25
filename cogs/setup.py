@@ -56,21 +56,4 @@ class Setup(commands.Cog):
         )
 
 async def setup(bot):
-    await bot.add_cog(Setup(bot))    async def setup(
-        self,
-        interaction: discord.Interaction
-    ):
-        embed = discord.Embed(
-            title="⚙️ Bot Setup",
-            description="Use the buttons below to configure the bot.",
-            color=discord.Color.blurple()
-        )
-
-        await interaction.response.send_message(
-            embed=embed,
-            view=SetupView(),
-            ephemeral=True
-        )
-
-async def setup(bot):
     await bot.add_cog(Setup(bot))
