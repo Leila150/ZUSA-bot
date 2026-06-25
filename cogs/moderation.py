@@ -4,6 +4,7 @@ from discord import app_commands
 from datetime import timedelta
 from db import db
 
+
 class Moderation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -30,12 +31,13 @@ class Moderation(commands.Cog):
         warns = db.get_warnings(member.id, interaction.guild.id)
 
         if not warns:
-            return await interaction.response.send_message(
+            await interaction.response.send_message(
                 "No warnings found."
             )
+            return
 
         text = "\n".join(
-            f"{i+1}. {w[0]}"
+            f"{i + 1}. {w[0]}"
             for i, w in enumerate(warns)
         )
 
@@ -68,7 +70,7 @@ class Moderation(commands.Cog):
         db.clear_warnings(member.id, interaction.guild.id)
 
         await interaction.response.send_message(
-            f"✅ Cleared warnings for {member.mention}"
+            f"✅ Cleared all warnings for {member.mention}"
         )
 
     @app_commands.command(name="kick", description="Kick a member")
@@ -99,7 +101,7 @@ class Moderation(commands.Cog):
             f"🔨 Banned {member.mention}"
         )
 
-    @app_commands.command(name="unban", description="Unban a user")
+    @app_commands.command(name="unban", description="Unban a user by ID")
     async def unban(
         self,
         interaction: discord.Interaction,
@@ -130,7 +132,7 @@ class Moderation(commands.Cog):
             f"⏳ Timed out {member.mention} for {minutes} minute(s)"
         )
 
-    @app_commands.command(name="untimeout", description="Remove timeout")
+    @app_commands.command(name="untimeout", description="Remove a timeout")
     async def untimeout(
         self,
         interaction: discord.Interaction,
@@ -156,43 +158,6 @@ class Moderation(commands.Cog):
             f"🗑 Deleted {len(deleted)} messages"
         )
 
-async def setup(bot):
-    await bot.add_cog(Moderation(bot))
-        embed = discord.Embed(
-            title=f"Warnings for {member}",
-            description=text,
-            color=discord.Color.orange()
-        )
-
-        await interaction.response.send_message(embed=embed)
-
-    @app_commands.command(name="kick", description="Kick a member")
-    @app_commands.checks.has_permissions(kick_members=True)
-    async def kick(
-        self,
-        interaction: discord.Interaction,
-        member: discord.Member,
-        reason: str = "No reason provided"
-    ):
-        await member.kick(reason=reason)
-
-        await interaction.response.send_message(
-            f"👢 Kicked {member.mention}"
-        )
-
-    @app_commands.command(name="ban", description="Ban a member")
-    @app_commands.checks.has_permissions(ban_members=True)
-    async def ban(
-        self,
-        interaction: discord.Interaction,
-        member: discord.Member,
-        reason: str = "No reason provided"
-    ):
-        await member.ban(reason=reason)
-
-        await interaction.response.send_message(
-            f"🔨 Banned {member.mention}"
-        )
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))
