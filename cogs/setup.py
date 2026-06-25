@@ -9,7 +9,8 @@ class SetupView(discord.ui.View):
 
     @discord.ui.button(
         label="Set Logs",
-        style=discord.ButtonStyle.red
+        style=discord.ButtonStyle.red,
+        emoji="📝"
     )
     async def set_logs(
         self,
@@ -22,7 +23,7 @@ class SetupView(discord.ui.View):
         )
 
         await interaction.response.send_message(
-            "✅ This channel is now the logs channel.",
+            "✅ This channel has been set as the logs channel.",
             ephemeral=True
         )
 
@@ -35,6 +36,27 @@ class Setup(commands.Cog):
         description="Open the bot setup panel"
     )
     async def setup(
+        self,
+        interaction: discord.Interaction
+    ):
+        embed = discord.Embed(
+            title="⚙️ Bot Setup",
+            description=(
+                "Use the buttons below to configure the bot.\n\n"
+                "📝 **Set Logs**\n"
+                "Sets the current channel as the logs channel."
+            ),
+            color=discord.Color.blurple()
+        )
+
+        await interaction.response.send_message(
+            embed=embed,
+            view=SetupView(),
+            ephemeral=True
+        )
+
+async def setup(bot):
+    await bot.add_cog(Setup(bot))    async def setup(
         self,
         interaction: discord.Interaction
     ):
